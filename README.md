@@ -10,15 +10,11 @@ To use this package, add `flutter_parsed_text` as a [dependency in your pubspec.
 import 'package:flutter_parsed_text/flutter_parsed_text.dart';;
 ```
 
-ParsedText can receive this paramters:
+ParsedText can receive this paramters & all the RichText parameters:
 
 `text`: Text that will be parsed and rendered.
 
 `style`: It takes a `TextStyle` object as it's property to style all the non links text objects.
-
-`wordSpacing`: A wordspacing paramter to adjust spacing between each words.
-
-`alignment`: A text alignment property used to align the the text enclosed.
 
 `parse`: Array of `MatchText` object - used for defining structure for pattern matching .
 
