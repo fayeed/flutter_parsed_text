@@ -1,16 +1,5 @@
 part of flutter_parsed_text;
 
-/// Email Regex - A predefined type for handling email matching
-const emailPattern =
-    r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$";
-
-/// URL Regex - A predefined type for handling URL matching
-const urlPattern =
-    r"^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$";
-
-/// Phone Regex - A predefined type for handling phone matching
-const phonePattern = r"^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$";
-
 /// Parse text and make them into multiple Flutter Text widgets
 class ParsedText extends StatelessWidget {
   /// If non-null, the style to use for the global text.
@@ -29,28 +18,61 @@ class ParsedText extends StatelessWidget {
   /// Takes a [String]
   final String text;
 
-  /// A wordspacing paramter to adjust spacing between each words
+  /// A text alignment property used to align the the text enclosed
   ///
-  /// It takes a [double] and default value is [5.0]
-  final double wordSpacing;
+  /// Uses a [TextAlign] object and default value is [TextAlign.start]
+  final TextAlign alignment;
 
   /// A text alignment property used to align the the text enclosed
   ///
-  /// Uses a [WrapAlignment] object and default value is [WrapAlignment.start]
-  final WrapAlignment alignment;
+  /// Uses a [TextDirection] object and default value is [TextDirection.start]
+  final TextDirection textDirection;
+
+  /// Whether the text should break at soft line breaks.
+  ///
+  ///If false, the glyphs in the text will be positioned as if there was unlimited horizontal space.
+  final bool softWrap;
+
+  /// How visual overflow should be handled.
+  final TextOverflow overflow;
+
+  /// The number of font pixels for each logical pixel.
+  ///
+  /// For example, if the text scale factor is 1.5, text will be 50% larger than
+  /// the specified font size.
+  final double textScaleFactor;
+
+  /// An optional maximum number of lines for the text to span, wrapping if necessary.
+  /// If the text exceeds the given number of lines, it will be truncated according
+  /// to [overflow].
+  ///
+  /// If this is 1, text will not wrap. Otherwise, text will be wrapped at the
+  /// edge of the box.
+  final int maxLines;
+
+  /// {@macro flutter.painting.textPainter.strutStyle}
+  final StrutStyle strutStyle;
+
+  /// {@macro flutter.widgets.text.DefaultTextStyle.textWidthBasis}
+  final TextWidthBasis textWidthBasis;
 
   /// Creates a parsedText widget
   ///
   /// [text] paramtere should not be null and is always required.
   /// If the [style] argument is null, the text will use the style from the
   /// closest enclosing [DefaultTextStyle].
-  ParsedText({
-    @required this.text,
-    this.parse,
-    this.style,
-    this.wordSpacing = 5.0,
-    this.alignment = WrapAlignment.start,
-  });
+  ParsedText(
+      {@required this.text,
+      this.parse,
+      this.style,
+      this.alignment = TextAlign.start,
+      this.textDirection,
+      this.softWrap = true,
+      this.overflow = TextOverflow.clip,
+      this.textScaleFactor = 1.0,
+      this.strutStyle,
+      this.textWidthBasis = TextWidthBasis.parent,
+      this.maxLines});
 
   @override
   Widget build(BuildContext context) {
@@ -61,11 +83,10 @@ class ParsedText extends StatelessWidget {
     // checks if each word matches either a predefined type of custom defined patterns
     // if a match is found creates a link Text with its function or return a
     // default Text
-    List<Widget> widgets = splits.map<Widget>((element) {
+    List<TextSpan> widgets = splits.map<TextSpan>((element) {
       // Default Text object if not pattern is matched
-      Widget widget = Text(
-        element,
-        style: style,
+      TextSpan widget = TextSpan(
+        text: "$element ",
       );
 
       // loop over to find patterns
@@ -80,16 +101,18 @@ class ParsedText extends StatelessWidget {
               Map<String, String> result =
                   e.renderText(str: element, pattern: e.pattern);
 
-              widget = LinkItem(
+              widget = TextSpan(
                 style: e.style != null ? e.style : style,
-                text: result['display'],
-                onTap: () => e.onTap(result['value']),
+                text: "${result['display']} ",
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () => e.onTap(result['value']),
               );
             } else {
-              widget = LinkItem(
+              widget = TextSpan(
                 style: e.style != null ? e.style : style,
-                text: element,
-                onTap: () => e.onTap(element),
+                text: "$element ",
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () => e.onTap(element),
               );
             }
           }
@@ -99,10 +122,11 @@ class ParsedText extends StatelessWidget {
           bool matched = emailRegExp.hasMatch(element);
 
           if (matched) {
-            widget = LinkItem(
+            widget = TextSpan(
               style: e.style != null ? e.style : style,
-              text: element,
-              onTap: () => e.onTap(element),
+              text: "$element ",
+              recognizer: TapGestureRecognizer()
+                ..onTap = () => e.onTap(element),
             );
           }
         } else if (e.type == PHONE) {
@@ -111,10 +135,11 @@ class ParsedText extends StatelessWidget {
           bool matched = phoneRegExp.hasMatch(element);
 
           if (matched) {
-            widget = LinkItem(
+            widget = TextSpan(
               style: e.style != null ? e.style : style,
-              text: element,
-              onTap: () => e.onTap(element),
+              text: "$element ",
+              recognizer: TapGestureRecognizer()
+                ..onTap = () => e.onTap(element),
             );
           }
         } else if (e.type == URL) {
@@ -123,57 +148,29 @@ class ParsedText extends StatelessWidget {
           bool matched = urlRegExp.hasMatch(element);
 
           if (matched) {
-            widget = LinkItem(
+            widget = TextSpan(
               style: e.style != null ? e.style : style,
-              text: element,
-              onTap: () => e.onTap(element),
+              text: "$element ",
+              recognizer: TapGestureRecognizer()
+                ..onTap = () => e.onTap(element),
             );
           }
         }
       });
-      // Add padding to the right to emulate a word spacing property
-      return Padding(
-        padding: EdgeInsets.only(right: wordSpacing),
-        child: widget,
-      );
+
+      return widget;
     }).toList();
 
-    // Wrapped with a wrap widget to emulate wrap Text's wrap property
-    return Wrap(
-      alignment: alignment,
-      children: <Widget>[...widgets],
-    );
-  }
-}
-
-/// A LinkItem widget which is just a GuestureDetector wrapped around Text widget
-class LinkItem extends StatelessWidget {
-  /// A callback funtion that will be called when a item is tapped
-  final Function onTap;
-
-  /// A custom style to be applied to the matched text
-  ///
-  /// It takes a [TextStyle] object
-  final TextStyle style;
-
-  /// A string text ideally a word
-  final String text;
-
-  /// Creates a LinkItem widget
-  ///
-  /// [text] paramtere should not be null and is always required.
-  /// If the [style] argument is null, the text will use the style from the
-  /// global Text.
-  const LinkItem({this.onTap, this.style, @required this.text});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Text(
-        text,
-        style: style,
-      ),
+    return RichText(
+      softWrap: softWrap,
+      overflow: overflow,
+      textScaleFactor: textScaleFactor,
+      maxLines: maxLines,
+      strutStyle: strutStyle,
+      textWidthBasis: textWidthBasis,
+      textAlign: alignment,
+      textDirection: textDirection,
+      text: TextSpan(children: <TextSpan>[...widgets], style: style),
     );
   }
 }
