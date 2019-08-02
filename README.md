@@ -1,14 +1,20 @@
-# Flutter Parsed Text
+<p align="center">
+  <img src="https://media.giphy.com/media/jO2LF6FB0CNNeTw2xh/giphy.gif" />
+  <h1 align="center" style="font-size: 48px;">🔗 Flutter Parsed text</h1>
+  <h5 align="center">
+A Flutter package to parse text and make them into multiple Flutter Text widget.</h5>
+</p>
 
-A Flutter package to parse text and make them into multiple Flutter Text widget.
 
-## Usage
+## Usage 💻
 
 To use this package, add `flutter_parsed_text` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/).
 
 ```dart
 import 'package:flutter_parsed_text/flutter_parsed_text.dart';;
 ```
+
+## Working ⚙️
 
 ParsedText can receive this paramters & all the RichText parameters:
 
@@ -31,7 +37,7 @@ MatchText(
 ),
 ```
 
-you can also define a custom pattern like this:
+>You can also define a custom pattern like this:
 
 ```dart
 MatchText(
@@ -48,9 +54,9 @@ MatchText(
 
 A boolean that show a diffrent text and passes a diffrent text to the callback
 
-eg: Your str is `"Mention [@michel:5455345]"` where `5455345` is ID of this user which will be passed as parameter to the callback funtion and `@michel` the value to display on interface. Your pattern for ID & username extraction : /\[(@[^:]+):([^\]]+)\]/i
+eg: Your str is `"Mention [@michel:5455345]"` where `5455345` is ID of this user which will be passed as parameter to the callback funtion and `@michel` the value to display on interface. Your pattern for ID & username extraction : `/\[(@[^:]+):([^\]]+)\]/i`
 
-Displayed text will be : `Mention ^^@michel^^`
+>Displayed text will be : `Mention ^^@michel^^`
 
 ```dart
 MatchText(
@@ -76,7 +82,7 @@ MatchText(
 ),
 ```
 
-## Example
+## Example ✍🏻
 
 Find the complete example wiring in the [Flutter_Parsed_Text example application](https://github.com/fayeed/flutter_parsed_text/blob/master/example/lib/main.dart).
 
@@ -101,15 +107,16 @@ ParsedText(
 )
 ```
 
-## Screens
+## Found this project useful? ❤️
+If you found this project useful, then please consider giving it a ⭐️ on Github and sharing it with your friends via social media.
 
-![Flutter_parsed_text screen](https://media.giphy.com/media/jO2LF6FB0CNNeTw2xh/giphy.gif)
-
-## API details
+## API details 👨🏻‍💻
 
 See the [flutter_parsed_text.dart](https://github.com/fayeed/flutter_parsed_text/blob/master/lib/flutter_parsed_text.dart) for more API details
 
-## Issues and feedback
+## License ⚖️
+- [MIT](https://github.com/fayeed/dash_chat/blob/master/LICENSE)
 
-Please file [issues](https://github.com/fayeed/flutter_parsed_text/issues)
-to send feedback or report a bug. Thank you!
+## Issues and feedback 💭
+
+If you have any suggestion for including a feature or if something doesn't work, feel free to open a Github [issue](https://github.com/fayeed/flutter_parsed_text/issues) for us to have a discussion on it.
