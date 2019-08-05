@@ -2,7 +2,7 @@
   <img src="https://media.giphy.com/media/jO2LF6FB0CNNeTw2xh/giphy.gif" />
   <h1 align="center" style="font-size: 48px;">🔗 Flutter Parsed text</h1>
   <h5 align="center">
-A Flutter package to parse text and make them into multiple Flutter Text widget.</h5>
+A Flutter package to parse text and extract parts using predefined types like <code>url</code>, <code>phone</code> and <code>email</code> and also supports <code>Regex</code>.</h5>
 </p>
 
 

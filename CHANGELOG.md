@@ -1,3 +1,7 @@
+## [1.1.2]
+
+- README.md updated
+
 ## [1.1.1]
 
 - README.md updated
