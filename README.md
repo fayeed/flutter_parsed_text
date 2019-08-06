@@ -11,7 +11,7 @@ A Flutter package to parse text and extract parts using predefined types like <c
 To use this package, add `flutter_parsed_text` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/).
 
 ```dart
-import 'package:flutter_parsed_text/flutter_parsed_text.dart';;
+import 'package:flutter_parsed_text/flutter_parsed_text.dart';
 ```
 
 ## Working ⚙️
