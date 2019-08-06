@@ -62,7 +62,8 @@ class ParsedText extends StatelessWidget {
   /// If the [style] argument is null, the text will use the style from the
   /// closest enclosing [DefaultTextStyle].
   ParsedText(
-      {@required this.text,
+      {Key key,
+      @required this.text,
       this.parse,
       this.style,
       this.alignment = TextAlign.start,
@@ -72,7 +73,8 @@ class ParsedText extends StatelessWidget {
       this.textScaleFactor = 1.0,
       this.strutStyle,
       this.textWidthBasis = TextWidthBasis.parent,
-      this.maxLines});
+      this.maxLines})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
