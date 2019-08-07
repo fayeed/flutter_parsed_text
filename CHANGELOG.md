@@ -1,3 +1,7 @@
+## [1.2.0]
+
+- Key added & In build types inproved & Changed how text parsing works
+
 ## [1.1.2]
 
 - README.md updated

@@ -61,25 +61,50 @@ class ParsedText extends StatelessWidget {
   /// [text] paramtere should not be null and is always required.
   /// If the [style] argument is null, the text will use the style from the
   /// closest enclosing [DefaultTextStyle].
-  ParsedText(
-      {Key key,
-      @required this.text,
-      this.parse,
-      this.style,
-      this.alignment = TextAlign.start,
-      this.textDirection,
-      this.softWrap = true,
-      this.overflow = TextOverflow.clip,
-      this.textScaleFactor = 1.0,
-      this.strutStyle,
-      this.textWidthBasis = TextWidthBasis.parent,
-      this.maxLines})
-      : super(key: key);
+  ParsedText({
+    Key key,
+    @required this.text,
+    this.parse,
+    this.style,
+    this.alignment = TextAlign.start,
+    this.textDirection,
+    this.softWrap = true,
+    this.overflow = TextOverflow.clip,
+    this.textScaleFactor = 1.0,
+    this.strutStyle,
+    this.textWidthBasis = TextWidthBasis.parent,
+    this.maxLines,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     // Seperate each word and create a new Array
-    List<String> splits = text.split(" ");
+    String newString = text;
+
+    // Parse the whole text and adds "%%%%" before and after the
+    // each matched text this will be used to split the text affectively
+    parse.forEach((e) {
+      if (e.type == EMAIL) {
+        RegExp regExp = RegExp(emailPattern, multiLine: true);
+        newString = newString.splitMapJoin(regExp,
+            onMatch: (m) => "%%%%${m.group(0)}%%%%", onNonMatch: (m) => "$m");
+      } else if (e.type == PHONE) {
+        RegExp regExp = RegExp(phonePattern);
+        newString = newString.splitMapJoin(regExp,
+            onMatch: (m) => "%%%%${m.group(0)}%%%%", onNonMatch: (m) => "$m");
+      } else if (e.type == URL) {
+        RegExp regExp = RegExp(urlPattern);
+        newString = newString.splitMapJoin(regExp,
+            onMatch: (m) => "%%%%${m.group(0)}%%%%", onNonMatch: (m) => "$m");
+      } else if (e.type == CUSTOM) {
+        RegExp regExp = RegExp(e.pattern);
+        newString = newString.splitMapJoin(regExp,
+            onMatch: (m) => "%%%%${m.group(0)}%%%%", onNonMatch: (m) => "$m");
+      }
+    });
+
+    // splits the modified text at "%%%%"
+    List<String> splits = newString.split("%%%%");
 
     // Map over the splits array to get a new Array with its elements as Widgets
     // checks if each word matches either a predefined type of custom defined patterns
@@ -88,11 +113,11 @@ class ParsedText extends StatelessWidget {
     List<TextSpan> widgets = splits.map<TextSpan>((element) {
       // Default Text object if not pattern is matched
       TextSpan widget = TextSpan(
-        text: "$element ",
+        text: "$element",
       );
 
       // loop over to find patterns
-      parse.forEach((e) {
+      for (final e in parse) {
         if (e.type == CUSTOM) {
           RegExp customRegExp = RegExp(e.pattern);
 
@@ -117,8 +142,10 @@ class ParsedText extends StatelessWidget {
                   ..onTap = () => e.onTap(element),
               );
             }
+            break;
           }
         } else if (e.type == EMAIL) {
+          print("email$element");
           RegExp emailRegExp = RegExp(emailPattern);
 
           bool matched = emailRegExp.hasMatch(element);
@@ -130,8 +157,10 @@ class ParsedText extends StatelessWidget {
               recognizer: TapGestureRecognizer()
                 ..onTap = () => e.onTap(element),
             );
+            break;
           }
         } else if (e.type == PHONE) {
+          print("phone $element");
           RegExp phoneRegExp = RegExp(phonePattern);
 
           bool matched = phoneRegExp.hasMatch(element);
@@ -143,8 +172,10 @@ class ParsedText extends StatelessWidget {
               recognizer: TapGestureRecognizer()
                 ..onTap = () => e.onTap(element),
             );
+            break;
           }
         } else if (e.type == URL) {
+          print("url $element");
           RegExp urlRegExp = RegExp(urlPattern);
 
           bool matched = urlRegExp.hasMatch(element);
@@ -156,9 +187,10 @@ class ParsedText extends StatelessWidget {
               recognizer: TapGestureRecognizer()
                 ..onTap = () => e.onTap(element),
             );
+            break;
           }
         }
-      });
+      }
 
       return widget;
     }).toList();
