@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://media.giphy.com/media/jO2LF6FB0CNNeTw2xh/giphy.gif" />
+  <img src="https://media.giphy.com/media/XeGBgGGTVk514aGI0D/giphy.gif" />
   <h1 align="center" style="font-size: 48px;">🔗 Flutter Parsed text</h1>
   <h5 align="center">
 A Flutter package to parse text and extract parts using predefined types like <code>url</code>, <code>phone</code> and <code>email</code> and also supports <code>Regex</code>.</h5>
