@@ -64,7 +64,7 @@ class ParsedText extends StatelessWidget {
   ParsedText({
     Key key,
     @required this.text,
-    this.parse,
+    this.parse = const <MatchText>[],
     this.style,
     this.alignment = TextAlign.start,
     this.textDirection,
