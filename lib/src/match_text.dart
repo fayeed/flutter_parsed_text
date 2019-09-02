@@ -33,11 +33,14 @@ class MatchText {
   /// Displayed text will be : Mention `@michel`
   Function({String str, String pattern}) renderText;
 
+  final RegexOptions regexOptions;
+
   /// Creates a MatchText object
   MatchText(
       {this.type = CUSTOM,
       this.pattern,
       this.style,
       this.onTap,
-      this.renderText});
+      this.renderText,
+      this.regexOptions = const RegexOptions()});
 }
