@@ -97,7 +97,11 @@ class ParsedText extends StatelessWidget {
         newString = newString.splitMapJoin(regExp,
             onMatch: (m) => "%%%%${m.group(0)}%%%%", onNonMatch: (m) => "$m");
       } else if (e.type == CUSTOM) {
-        RegExp regExp = RegExp(e.pattern);
+        RegExp regExp = RegExp(e.pattern,
+            multiLine: e.regexOptions.multiLine,
+            caseSensitive: e.regexOptions.caseSensitive,
+            unicode: e.regexOptions.unicode,
+            dotAll: e.regexOptions.dotAll);
         newString = newString.splitMapJoin(regExp,
             onMatch: (m) => "%%%%${m.group(0)}%%%%", onNonMatch: (m) => "$m");
       }
@@ -119,7 +123,11 @@ class ParsedText extends StatelessWidget {
       // loop over to find patterns
       for (final e in parse) {
         if (e.type == CUSTOM) {
-          RegExp customRegExp = RegExp(e.pattern);
+          RegExp customRegExp = RegExp(e.pattern,
+              multiLine: e.regexOptions.multiLine,
+              caseSensitive: e.regexOptions.caseSensitive,
+              unicode: e.regexOptions.unicode,
+              dotAll: e.regexOptions.dotAll);
 
           bool matched = customRegExp.hasMatch(element);
 
