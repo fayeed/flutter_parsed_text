@@ -1,3 +1,7 @@
+## [1.2.2]
+
+- Regex Options added as parameter
+
 ## [1.2.1]
 
 - Empty List as default value for parse

@@ -14,11 +14,12 @@ class RegexOptions {
   ///
   ///  If `dotAll` is enabled, then the `.` pattern will match _all_ characters,
   ///  including line terminators.
-  const RegexOptions(
-      {this.multiLine = false,
-      this.caseSensitive = true,
-      this.unicode = false,
-      this.dotAll = false});
+  const RegexOptions({
+    this.multiLine = false,
+    this.caseSensitive = true,
+    this.unicode = false,
+    this.dotAll = false,
+  });
 
   final bool multiLine;
   final bool unicode;

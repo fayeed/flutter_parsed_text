@@ -52,6 +52,27 @@ MatchText(
 )
 ```
 
+>You can also set RegexOption for the custom regex pattern like so:
+
+```dart
+MatchText(
+  pattern: r"\B#+([\w]+)\b", // a custom pattern to match
+  regexOptions: RegexOptions(
+    multiLine = false,
+    caseSensitive = false,
+    unicode = false,
+    dotAll = false
+  )
+  style: TextStyle(
+    color: Colors.pink,
+    fontSize: 24,
+  ), // custom style to be applied to this matched text
+  onTap: (url) async {
+  // do something here with passed url
+  }, // callback funtion when the text is tapped on
+)
+```
+
 A boolean that show a diffrent text and passes a diffrent text to the callback
 
 eg: Your str is `"Mention [@michel:5455345]"` where `5455345` is ID of this user which will be passed as parameter to the callback funtion and `@michel` the value to display on interface. Your pattern for ID & username extraction : `/\[(@[^:]+):([^\]]+)\]/i`

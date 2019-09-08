@@ -36,11 +36,12 @@ class MatchText {
   final RegexOptions regexOptions;
 
   /// Creates a MatchText object
-  MatchText(
-      {this.type = CUSTOM,
-      this.pattern,
-      this.style,
-      this.onTap,
-      this.renderText,
-      this.regexOptions = const RegexOptions()});
+  MatchText({
+    this.type = CUSTOM,
+    this.pattern,
+    this.style,
+    this.onTap,
+    this.renderText,
+    this.regexOptions = const RegexOptions(),
+  });
 }
