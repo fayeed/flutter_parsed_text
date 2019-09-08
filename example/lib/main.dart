@@ -36,10 +36,10 @@ class _MainAppState extends State<MainApp> {
             child: ParsedText(
               alignment: TextAlign.start,
               text:
-                  "[@michael:51515151] Hello this is an example of the ParsedText, links like http://www.google.com or http://www.facebook.com are clickable and phone number 444-555-6666 can call too. But you can also do more with this package, for example Bob will change style and David too.\nAlso a US number example +1-(800)-831-1117. foo@gmail.com And the magic number is 42! #flutter #flutterdev",
+                  "[@michael:51515151] Hello london this is an example of the ParsedText, links like http://www.google.com or http://www.facebook.com are clickable and phone number 444-555-6666 can call too. But you can also do more with this package, for example Bob will change style and David too.\nAlso a US number example +1-(800)-831-1117. foo@gmail.com And the magic number is 42! #flutter #flutterdev",
               parse: <MatchText>[
                 MatchText(
-                    type: "email",
+                    type: ParsedType.EMAIL,
                     style: TextStyle(
                       color: Colors.red,
                       fontSize: 24,
@@ -48,7 +48,7 @@ class _MainAppState extends State<MainApp> {
                       launch("mailto:" + url);
                     }),
                 MatchText(
-                    type: "url",
+                    type: ParsedType.URL,
                     style: TextStyle(
                       color: Colors.blue,
                       fontSize: 24,
@@ -61,7 +61,7 @@ class _MainAppState extends State<MainApp> {
                       }
                     }),
                 MatchText(
-                    type: "phone",
+                    type: ParsedType.PHONE,
                     style: TextStyle(
                       color: Colors.purple,
                       fontSize: 24,
@@ -126,7 +126,14 @@ class _MainAppState extends State<MainApp> {
                           );
                         },
                       );
-                    })
+                    }),
+                MatchText(
+                    pattern: r"lon",
+                    style: TextStyle(
+                      color: Colors.pink,
+                      fontSize: 24,
+                    ),
+                    onTap: (url) async {})
               ],
               style: TextStyle(
                 fontSize: 24,

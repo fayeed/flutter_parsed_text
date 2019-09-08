@@ -26,7 +26,7 @@ ParsedText can receive this paramters & all the RichText parameters:
 
 ```dart
 MatchText(
-  type: "email", // predefined type can be any of this email, phone, url or custom
+  type: ParsedType.EMAIL, // predefined type can be any of this ParsedTypes
   style: TextStyle(
     color: Colors.red,
     fontSize: 24,

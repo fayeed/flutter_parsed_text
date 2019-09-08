@@ -84,19 +84,19 @@ class ParsedText extends StatelessWidget {
     // Parse the whole text and adds "%%%%" before and after the
     // each matched text this will be used to split the text affectively
     parse.forEach((e) {
-      if (e.type == EMAIL) {
+      if (e.type == ParsedType.EMAIL) {
         RegExp regExp = RegExp(emailPattern, multiLine: true);
         newString = newString.splitMapJoin(regExp,
             onMatch: (m) => "%%%%${m.group(0)}%%%%", onNonMatch: (m) => "$m");
-      } else if (e.type == PHONE) {
+      } else if (e.type == ParsedType.PHONE) {
         RegExp regExp = RegExp(phonePattern);
         newString = newString.splitMapJoin(regExp,
             onMatch: (m) => "%%%%${m.group(0)}%%%%", onNonMatch: (m) => "$m");
-      } else if (e.type == URL) {
+      } else if (e.type == ParsedType.URL) {
         RegExp regExp = RegExp(urlPattern);
         newString = newString.splitMapJoin(regExp,
             onMatch: (m) => "%%%%${m.group(0)}%%%%", onNonMatch: (m) => "$m");
-      } else if (e.type == CUSTOM) {
+      } else if (e.type == ParsedType.CUSTOM) {
         RegExp regExp = RegExp(e.pattern,
             multiLine: e.regexOptions.multiLine,
             caseSensitive: e.regexOptions.caseSensitive,
@@ -122,7 +122,7 @@ class ParsedText extends StatelessWidget {
 
       // loop over to find patterns
       for (final e in parse) {
-        if (e.type == CUSTOM) {
+        if (e.type == ParsedType.CUSTOM) {
           RegExp customRegExp = RegExp(e.pattern,
               multiLine: e.regexOptions.multiLine,
               caseSensitive: e.regexOptions.caseSensitive,
@@ -138,22 +138,21 @@ class ParsedText extends StatelessWidget {
 
               widget = TextSpan(
                 style: e.style != null ? e.style : style,
-                text: "${result['display']} ",
+                text: "${result['display']}",
                 recognizer: TapGestureRecognizer()
                   ..onTap = () => e.onTap(result['value']),
               );
             } else {
               widget = TextSpan(
                 style: e.style != null ? e.style : style,
-                text: "$element ",
+                text: "$element",
                 recognizer: TapGestureRecognizer()
                   ..onTap = () => e.onTap(element),
               );
             }
             break;
           }
-        } else if (e.type == EMAIL) {
-          print("email$element");
+        } else if (e.type == ParsedType.EMAIL) {
           RegExp emailRegExp = RegExp(emailPattern);
 
           bool matched = emailRegExp.hasMatch(element);
@@ -161,14 +160,13 @@ class ParsedText extends StatelessWidget {
           if (matched) {
             widget = TextSpan(
               style: e.style != null ? e.style : style,
-              text: "$element ",
+              text: "$element",
               recognizer: TapGestureRecognizer()
                 ..onTap = () => e.onTap(element),
             );
             break;
           }
-        } else if (e.type == PHONE) {
-          print("phone $element");
+        } else if (e.type == ParsedType.PHONE) {
           RegExp phoneRegExp = RegExp(phonePattern);
 
           bool matched = phoneRegExp.hasMatch(element);
@@ -176,14 +174,13 @@ class ParsedText extends StatelessWidget {
           if (matched) {
             widget = TextSpan(
               style: e.style != null ? e.style : style,
-              text: "$element ",
+              text: "$element",
               recognizer: TapGestureRecognizer()
                 ..onTap = () => e.onTap(element),
             );
             break;
           }
-        } else if (e.type == URL) {
-          print("url $element");
+        } else if (e.type == ParsedType.URL) {
           RegExp urlRegExp = RegExp(urlPattern);
 
           bool matched = urlRegExp.hasMatch(element);
@@ -191,7 +188,7 @@ class ParsedText extends StatelessWidget {
           if (matched) {
             widget = TextSpan(
               style: e.style != null ? e.style : style,
-              text: "$element ",
+              text: "$element",
               recognizer: TapGestureRecognizer()
                 ..onTap = () => e.onTap(element),
             );

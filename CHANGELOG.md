@@ -1,3 +1,7 @@
+## [1.2.3]
+
+- ParsedType enum added and fixed a issue where a space was added after the parsed text.
+
 ## [1.2.2]
 
 - Regex Options added as parameter

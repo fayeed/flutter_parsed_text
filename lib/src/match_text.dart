@@ -1,16 +1,12 @@
 part of flutter_parsed_text;
 
-/// Predefined types
-const EMAIL = "email";
-const PHONE = "phone";
-const URL = "url";
-const CUSTOM = "custom";
+enum ParsedType { EMAIL, PHONE, URL, CUSTOM }
 
 /// A MatchText class which provides a structure for [ParsedText] to handle
 /// Pattern matching and also to provide custom [Function] and custom [TextStyle].
 class MatchText {
   /// Used to enforce Predefined regex to match from
-  String type;
+  ParsedType type;
 
   /// If no [type] property is explicitly defined then this propery must be
   /// non null takes a [regex] string
@@ -37,7 +33,7 @@ class MatchText {
 
   /// Creates a MatchText object
   MatchText({
-    this.type = CUSTOM,
+    this.type = ParsedType.CUSTOM,
     this.pattern,
     this.style,
     this.onTap,
