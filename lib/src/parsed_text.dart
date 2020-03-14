@@ -56,6 +56,11 @@ class ParsedText extends StatelessWidget {
   /// {@macro flutter.widgets.text.DefaultTextStyle.textWidthBasis}
   final TextWidthBasis textWidthBasis;
 
+  /// Make this text selectable.
+  /// 
+  /// SelectableText does not support softwrap, overflow, textScaleFactor
+  final bool selectable;
+
   /// Creates a parsedText widget
   ///
   /// [text] paramtere should not be null and is always required.
@@ -74,6 +79,7 @@ class ParsedText extends StatelessWidget {
     this.strutStyle,
     this.textWidthBasis = TextWidthBasis.parent,
     this.maxLines,
+    this.selectable = false,
   }) : super(key: key);
 
   @override
@@ -199,6 +205,17 @@ class ParsedText extends StatelessWidget {
 
       return widget;
     }).toList();
+
+    if (selectable) {
+      return SelectableText.rich(
+        TextSpan(children: <TextSpan>[...widgets], style: style),
+        maxLines: maxLines,
+        strutStyle: strutStyle,
+        textWidthBasis: textWidthBasis,
+        textAlign: alignment,
+        textDirection: textDirection,
+      );
+    }
 
     return RichText(
       softWrap: softWrap,
