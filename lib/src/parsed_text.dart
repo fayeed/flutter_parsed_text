@@ -61,6 +61,8 @@ class ParsedText extends StatelessWidget {
   /// SelectableText does not support softwrap, overflow, textScaleFactor
   final bool selectable;
 
+  final GestureTapCallback onTap;
+
   /// Creates a parsedText widget
   ///
   /// [text] paramtere should not be null and is always required.
@@ -79,6 +81,7 @@ class ParsedText extends StatelessWidget {
     this.strutStyle,
     this.textWidthBasis = TextWidthBasis.parent,
     this.maxLines,
+    this.onTap,
     this.selectable = false,
   }) : super(key: key);
 
@@ -214,6 +217,7 @@ class ParsedText extends StatelessWidget {
         textWidthBasis: textWidthBasis,
         textAlign: alignment,
         textDirection: textDirection,
+        onTap: onTap,
       );
     }
 
