@@ -1,3 +1,9 @@
+## [1.2.4]
+
+- Add option to make text selectable
+
+- Add onTap callback
+
 ## [1.2.3]
 
 - ParsedType enum added and fixed a issue where a space was added after the parsed text.
