@@ -36,6 +36,9 @@ class ParsedText extends StatelessWidget {
   /// How visual overflow should be handled.
   final TextOverflow overflow;
 
+  /// Custom widget for overflow, for eg., `..see more`.
+  final TextOverflowWidget overflowWidget;
+
   /// The number of font pixels for each logical pixel.
   ///
   /// For example, if the text scale factor is 1.5, text will be 50% larger than
@@ -57,7 +60,7 @@ class ParsedText extends StatelessWidget {
   final TextWidthBasis textWidthBasis;
 
   /// Make this text selectable.
-  /// 
+  ///
   /// SelectableText does not support softwrap, overflow, textScaleFactor
   final bool selectable;
 
@@ -83,6 +86,7 @@ class ParsedText extends StatelessWidget {
     this.maxLines,
     this.onTap,
     this.selectable = false,
+    this.overflowWidget,
   }) : super(key: key);
 
   @override
@@ -221,7 +225,8 @@ class ParsedText extends StatelessWidget {
       );
     }
 
-    return RichText(
+    return ExtendedText.rich(
+      TextSpan(children: <TextSpan>[...widgets], style: style),
       softWrap: softWrap,
       overflow: overflow,
       textScaleFactor: textScaleFactor,
@@ -230,7 +235,7 @@ class ParsedText extends StatelessWidget {
       textWidthBasis: textWidthBasis,
       textAlign: alignment,
       textDirection: textDirection,
-      text: TextSpan(children: <TextSpan>[...widgets], style: style),
+      overflowWidget: overflowWidget,
     );
   }
 }
