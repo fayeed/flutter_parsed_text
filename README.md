@@ -58,11 +58,11 @@ MatchText(
 MatchText(
   pattern: r"\B#+([\w]+)\b", // a custom pattern to match
   regexOptions: RegexOptions(
-    multiLine = false,
-    caseSensitive = false,
-    unicode = false,
-    dotAll = false
-  )
+    multiLine : false,
+    caseSensitive : false,
+    unicode : false,
+    dotAll : false
+  ),
   style: TextStyle(
     color: Colors.pink,
     fontSize: 24,
