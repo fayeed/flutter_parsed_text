@@ -57,11 +57,11 @@ class ParsedText extends StatelessWidget {
   final TextWidthBasis textWidthBasis;
 
   /// Make this text selectable.
-  /// 
+  ///
   /// SelectableText does not support softwrap, overflow, textScaleFactor
   final bool selectable;
 
-  final GestureTapCallback onTap;
+  final Function onTap;
 
   /// Creates a parsedText widget
   ///
@@ -131,6 +131,10 @@ class ParsedText extends StatelessWidget {
 
       // loop over to find patterns
       for (final e in parse) {
+        final recognizer = (String value) => e.onTap != null
+            ? (TapGestureRecognizer()..onTap = () => e.onTap(value))
+            : null;
+
         if (e.type == ParsedType.CUSTOM) {
           RegExp customRegExp = RegExp(e.pattern,
               multiLine: e.regexOptions.multiLine,
@@ -148,15 +152,13 @@ class ParsedText extends StatelessWidget {
               widget = TextSpan(
                 style: e.style != null ? e.style : style,
                 text: "${result['display']}",
-                recognizer: TapGestureRecognizer()
-                  ..onTap = () => e.onTap(result['value']),
+                recognizer: recognizer(result['value']),
               );
             } else {
               widget = TextSpan(
                 style: e.style != null ? e.style : style,
                 text: "$element",
-                recognizer: TapGestureRecognizer()
-                  ..onTap = () => e.onTap(element),
+                recognizer: recognizer(element),
               );
             }
             break;
@@ -170,8 +172,7 @@ class ParsedText extends StatelessWidget {
             widget = TextSpan(
               style: e.style != null ? e.style : style,
               text: "$element",
-              recognizer: TapGestureRecognizer()
-                ..onTap = () => e.onTap(element),
+              recognizer: recognizer(element),
             );
             break;
           }
@@ -184,8 +185,7 @@ class ParsedText extends StatelessWidget {
             widget = TextSpan(
               style: e.style != null ? e.style : style,
               text: "$element",
-              recognizer: TapGestureRecognizer()
-                ..onTap = () => e.onTap(element),
+              recognizer: recognizer(element),
             );
             break;
           }
@@ -198,8 +198,7 @@ class ParsedText extends StatelessWidget {
             widget = TextSpan(
               style: e.style != null ? e.style : style,
               text: "$element",
-              recognizer: TapGestureRecognizer()
-                ..onTap = () => e.onTap(element),
+              recognizer: recognizer(element),
             );
             break;
           }
