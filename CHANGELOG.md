@@ -1,3 +1,7 @@
+## [1.2.5]
+
+- Fixed an issue where not passing `onTap` for MatchText would result in an error.
+
 ## [1.2.4]
 
 - Add option to make text selectable
