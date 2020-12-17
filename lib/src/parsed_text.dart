@@ -123,9 +123,9 @@ class ParsedText extends StatelessWidget {
     // checks if each word matches either a predefined type of custom defined patterns
     // if a match is found creates a link Text with its function or return a
     // default Text
-    List<TextSpan> widgets = splits.map<TextSpan>((element) {
+    List<InlineSpan> widgets = splits.map<InlineSpan>((element) {
       // Default Text object if not pattern is matched
-      TextSpan widget = TextSpan(
+      InlineSpan widget = TextSpan(
         text: "$element",
       );
 
@@ -153,6 +153,11 @@ class ParsedText extends StatelessWidget {
                 style: e.style != null ? e.style : style,
                 text: "${result['display']}",
                 recognizer: recognizer(result['value']),
+              );
+            } else if (e.renderWidget != null) {
+              widget = WidgetSpan(
+                alignment: PlaceholderAlignment.middle,
+                child: e.renderWidget(text: element, pattern: e.pattern),
               );
             } else {
               widget = TextSpan(
@@ -210,7 +215,7 @@ class ParsedText extends StatelessWidget {
 
     if (selectable) {
       return SelectableText.rich(
-        TextSpan(children: <TextSpan>[...widgets], style: style),
+        TextSpan(children: <InlineSpan>[...widgets], style: style),
         maxLines: maxLines,
         strutStyle: strutStyle,
         textWidthBasis: textWidthBasis,
@@ -229,7 +234,7 @@ class ParsedText extends StatelessWidget {
       textWidthBasis: textWidthBasis,
       textAlign: alignment,
       textDirection: textDirection,
-      text: TextSpan(children: <TextSpan>[...widgets], style: style),
+      text: TextSpan(children: <InlineSpan>[...widgets], style: style),
     );
   }
 }

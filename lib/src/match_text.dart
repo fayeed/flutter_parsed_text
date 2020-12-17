@@ -29,6 +29,10 @@ class MatchText {
   /// Displayed text will be : Mention `@michel`
   Function({String str, String pattern}) renderText;
 
+  /// A callback function that takes the [text] the matches the [pattern] and returns
+  /// the [Widget] to be displayed inside a [WidgetSpan]
+  Widget Function({String text, String pattern}) renderWidget;
+
   final RegexOptions regexOptions;
 
   /// Creates a MatchText object
@@ -38,6 +42,7 @@ class MatchText {
     this.style,
     this.onTap,
     this.renderText,
+    this.renderWidget,
     this.regexOptions = const RegexOptions(),
   });
 }
