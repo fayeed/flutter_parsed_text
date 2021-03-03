@@ -5,7 +5,7 @@ class ParsedText extends StatelessWidget {
   /// If non-null, the style to use for the global text.
   ///
   /// It takes a [TextStyle] object as it's property to style all the non links text objects.
-  final TextStyle style;
+  final TextStyle? style;
 
   /// Takes a list of [MatchText] object.
   ///
@@ -26,7 +26,7 @@ class ParsedText extends StatelessWidget {
   /// A text alignment property used to align the the text enclosed
   ///
   /// Uses a [TextDirection] object and default value is [TextDirection.start]
-  final TextDirection textDirection;
+  final TextDirection? textDirection;
 
   /// Whether the text should break at soft line breaks.
   ///
@@ -48,10 +48,10 @@ class ParsedText extends StatelessWidget {
   ///
   /// If this is 1, text will not wrap. Otherwise, text will be wrapped at the
   /// edge of the box.
-  final int maxLines;
+  final int? maxLines;
 
   /// {@macro flutter.painting.textPainter.strutStyle}
-  final StrutStyle strutStyle;
+  final StrutStyle? strutStyle;
 
   /// {@macro flutter.widgets.text.DefaultTextStyle.textWidthBasis}
   final TextWidthBasis textWidthBasis;
@@ -61,7 +61,7 @@ class ParsedText extends StatelessWidget {
   /// SelectableText does not support softwrap, overflow, textScaleFactor
   final bool selectable;
 
-  final Function onTap;
+  final Function? onTap;
 
   /// Creates a parsedText widget
   ///
@@ -69,8 +69,8 @@ class ParsedText extends StatelessWidget {
   /// If the [style] argument is null, the text will use the style from the
   /// closest enclosing [DefaultTextStyle].
   ParsedText({
-    Key key,
-    @required this.text,
+    Key? key,
+    required this.text,
     this.parse = const <MatchText>[],
     this.style,
     this.alignment = TextAlign.start,
@@ -106,7 +106,7 @@ class ParsedText extends StatelessWidget {
         newString = newString.splitMapJoin(regExp,
             onMatch: (m) => "%%%%${m.group(0)}%%%%", onNonMatch: (m) => "$m");
       } else if (e.type == ParsedType.CUSTOM) {
-        RegExp regExp = RegExp(e.pattern,
+        RegExp regExp = RegExp(e.pattern!,
             multiLine: e.regexOptions.multiLine,
             caseSensitive: e.regexOptions.caseSensitive,
             unicode: e.regexOptions.unicode,
@@ -131,12 +131,13 @@ class ParsedText extends StatelessWidget {
 
       // loop over to find patterns
       for (final e in parse) {
-        final recognizer = (String value) => e.onTap != null
-            ? (TapGestureRecognizer()..onTap = () => e.onTap(value))
+        final recognizer = (String? value) => e.onTap != null
+            ? (TapGestureRecognizer()..onTap = () => e.onTap!(value))
             : null;
 
         if (e.type == ParsedType.CUSTOM) {
-          RegExp customRegExp = RegExp(e.pattern,
+          final String pattern = e.pattern!;
+          RegExp customRegExp = RegExp(pattern,
               multiLine: e.regexOptions.multiLine,
               caseSensitive: e.regexOptions.caseSensitive,
               unicode: e.regexOptions.unicode,
@@ -147,7 +148,7 @@ class ParsedText extends StatelessWidget {
           if (matched) {
             if (e.renderText != null) {
               Map<String, String> result =
-                  e.renderText(str: element, pattern: e.pattern);
+                  e.renderText!(str: element, pattern: pattern);
 
               widget = TextSpan(
                 style: e.style != null ? e.style : style,
@@ -216,7 +217,7 @@ class ParsedText extends StatelessWidget {
         textWidthBasis: textWidthBasis,
         textAlign: alignment,
         textDirection: textDirection,
-        onTap: onTap,
+        onTap: onTap as void Function()?,
       );
     }
 
