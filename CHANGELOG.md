@@ -1,6 +1,10 @@
+## [2.1.0]
+
+- Added support for Inline widgets. Thanks to - [@angelosilvestre](https://github.com/angelosilvestre)
+
 ## [2.0.0]
 
-- Migrates to dart null-safety
+- Migrates to dart null-safety. Thanks to - [@josh-burton](https://github.com/josh-burton)
 
 ## [1.2.5]
 
