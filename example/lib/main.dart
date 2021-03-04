@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parsed_text/flutter_parsed_text.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher.dart' show canLaunch, launch;
 
 main() {
   runApp(MyApp());
@@ -75,22 +75,33 @@ class _MainAppState extends State<MainApp> {
                       color: Colors.green,
                       fontSize: 24,
                     ),
-                    renderText: ({String str, String pattern}) {
+                    renderWidget: (
+                        {required String text, required String pattern}) {
                       Map<String, String> map = Map<String, String>();
                       RegExp customRegExp = RegExp(pattern);
-                      Match match = customRegExp.firstMatch(str);
-                      map['display'] = match.group(1);
-                      map['value'] = match.group(2);
-                      return map;
+                      Match match = customRegExp.firstMatch(text)!;
+                      map['display'] = match.group(1)!;
+                      map['value'] = match.group(2)!;
+                      return Chip(
+                        label: Text(
+                          map['display']!,
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        backgroundColor: Colors.purple,
+                      );
                     },
                     onTap: (url) {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
+                          Map<String, String> map = Map<String, String>();
+                          RegExp customRegExp =
+                              RegExp(r"\[(@[^:]+):([^\]]+)\]");
+                          Match match = customRegExp.firstMatch(url)!;
                           // return object of type Dialog
                           return AlertDialog(
                             title: new Text("Mentions clicked"),
-                            content: new Text("$url clicked."),
+                            content: new Text("${match.group(1)!} clicked."),
                             actions: <Widget>[
                               // usually buttons at the bottom of the dialog
                               new FlatButton(
