@@ -1,3 +1,7 @@
+## [2.0.0]
+
+- Migrates to dart null-safety
+
 ## [1.2.5]
 
 - Fixed an issue where not passing `onTap` for MatchText would result in an error.
