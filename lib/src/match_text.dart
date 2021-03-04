@@ -27,11 +27,17 @@ class MatchText {
   /// and @michel the value to display on interface.
   /// Your pattern for ID & username extraction : `/\[(@[^:]+):([^\]]+)\]/`i
   /// Displayed text will be : Mention `@michel`
-  Map<String, String> Function({required String str, required String pattern})? renderText;
+  Map<String, String> Function({
+    required String str,
+    required String pattern,
+  })? renderText;
 
   /// A callback function that takes the [text] the matches the [pattern] and returns
   /// the [Widget] to be displayed inside a [WidgetSpan]
-  Widget Function({String text, String pattern}) renderWidget;
+  Widget Function({
+    required String text,
+    required String pattern,
+  })? renderWidget;
 
   final RegexOptions regexOptions;
 
