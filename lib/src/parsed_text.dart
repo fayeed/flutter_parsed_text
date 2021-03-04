@@ -158,7 +158,10 @@ class ParsedText extends StatelessWidget {
             } else if (e.renderWidget != null) {
               widget = WidgetSpan(
                 alignment: PlaceholderAlignment.middle,
-                child: e.renderWidget(text: element, pattern: e.pattern),
+                child: GestureDetector(
+                  onTap: () => e.onTap!(element),
+                  child: e.renderWidget!(text: element, pattern: e.pattern!),
+                ),
               );
             } else {
               widget = TextSpan(
