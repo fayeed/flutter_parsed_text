@@ -1,3 +1,7 @@
+## [2.0.1]
+
+- Add dash to the ParsedType.URL match
+
 ## [2.0.0]
 
 - Migrates to dart null-safety
