@@ -16,7 +16,10 @@ class MatchText {
   TextStyle? style;
 
   /// A custom [Function] to handle onTap.
-  Function? onTap;
+  Function(String)? onTap;
+
+  /// A custom [Function] to handle onLongTap.
+  Function(String)? onLongTap;
 
   /// A callback function that takes two parameter String & pattern
   ///
@@ -47,6 +50,7 @@ class MatchText {
     this.pattern,
     this.style,
     this.onTap,
+    this.onLongTap,
     this.renderText,
     this.renderWidget,
     this.regexOptions = const RegexOptions(),

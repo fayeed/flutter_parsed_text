@@ -131,17 +131,15 @@ class ParsedText extends StatelessWidget {
 
       // loop over to find patterns
       for (final e in parse) {
-        final recognizer = (String? value) => e.onTap != null
-            ? (TapGestureRecognizer()..onTap = () => e.onTap!(value))
-            : null;
-
         if (e.type == ParsedType.CUSTOM) {
           final String pattern = e.pattern!;
-          RegExp customRegExp = RegExp(pattern,
-              multiLine: e.regexOptions.multiLine,
-              caseSensitive: e.regexOptions.caseSensitive,
-              unicode: e.regexOptions.unicode,
-              dotAll: e.regexOptions.dotAll);
+          RegExp customRegExp = RegExp(
+            pattern,
+            multiLine: e.regexOptions.multiLine,
+            caseSensitive: e.regexOptions.caseSensitive,
+            unicode: e.regexOptions.unicode,
+            dotAll: e.regexOptions.dotAll,
+          );
 
           bool matched = customRegExp.hasMatch(element);
 
@@ -150,24 +148,35 @@ class ParsedText extends StatelessWidget {
               Map<String, String> result =
                   e.renderText!(str: element, pattern: pattern);
 
-              widget = TextSpan(
-                style: e.style != null ? e.style : style,
-                text: "${result['display']}",
-                recognizer: recognizer(result['value']),
+              widget = WidgetSpan(
+                child: GestureDetector(
+                  onTap: () => e.onTap!(element),
+                  onLongPress: () => e.onLongTap!(element),
+                  child: Text(
+                    "${result['display']}",
+                    style: e.style != null ? e.style : style,
+                  ),
+                ),
               );
             } else if (e.renderWidget != null) {
               widget = WidgetSpan(
                 alignment: PlaceholderAlignment.middle,
                 child: GestureDetector(
                   onTap: () => e.onTap!(element),
+                  onLongPress: () => e.onLongTap!(element),
                   child: e.renderWidget!(text: element, pattern: e.pattern!),
                 ),
               );
             } else {
-              widget = TextSpan(
-                style: e.style != null ? e.style : style,
-                text: "$element",
-                recognizer: recognizer(element),
+              widget = WidgetSpan(
+                child: GestureDetector(
+                  onTap: () => e.onTap!(element),
+                  onLongPress: () => e.onLongTap!(element),
+                  child: Text(
+                    "$element",
+                    style: e.style != null ? e.style : style,
+                  ),
+                ),
               );
             }
             break;
@@ -178,10 +187,15 @@ class ParsedText extends StatelessWidget {
           bool matched = emailRegExp.hasMatch(element);
 
           if (matched) {
-            widget = TextSpan(
-              style: e.style != null ? e.style : style,
-              text: "$element",
-              recognizer: recognizer(element),
+            widget = WidgetSpan(
+              child: GestureDetector(
+                onTap: () => e.onTap!(element),
+                onLongPress: () => e.onLongTap!(element),
+                child: Text(
+                  "$element",
+                  style: e.style != null ? e.style : style,
+                ),
+              ),
             );
             break;
           }
@@ -191,10 +205,15 @@ class ParsedText extends StatelessWidget {
           bool matched = phoneRegExp.hasMatch(element);
 
           if (matched) {
-            widget = TextSpan(
-              style: e.style != null ? e.style : style,
-              text: "$element",
-              recognizer: recognizer(element),
+            widget = WidgetSpan(
+              child: GestureDetector(
+                onTap: () => e.onTap!(element),
+                onLongPress: () => e.onLongTap!(element),
+                child: Text(
+                  "$element",
+                  style: e.style != null ? e.style : style,
+                ),
+              ),
             );
             break;
           }
@@ -204,10 +223,15 @@ class ParsedText extends StatelessWidget {
           bool matched = urlRegExp.hasMatch(element);
 
           if (matched) {
-            widget = TextSpan(
-              style: e.style != null ? e.style : style,
-              text: "$element",
-              recognizer: recognizer(element),
+            widget = WidgetSpan(
+              child: GestureDetector(
+                onTap: () => e.onTap!(element),
+                onLongPress: () => e.onLongTap!(element),
+                child: Text(
+                  "$element",
+                  style: e.style != null ? e.style : style,
+                ),
+              ),
             );
             break;
           }
