@@ -1,3 +1,9 @@
+## [2.2.0]
+
+- Removed regexOptions property from MatchText and now comes with a global regexOptions property for ParsedText Widget.
+- Changed the internals of the ParsedText widget, it now works similar to [flutter_mentions](https://github.com/fayeed/flutter_mentions)
+- This also fixes issue [#11](https://github.com/fayeed/flutter_parsed_text/issues/11)
+
 ## [2.1.1]
 
 - Add dash to the ParsedType.URL match

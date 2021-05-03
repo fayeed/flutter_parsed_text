@@ -1,6 +1,6 @@
 name: flutter_parsed_text
 description: A Flutter package to parse text and make them into multiple Flutter Text widget.
-version: 2.1.1
+version: 2.2.0
 homepage: https://github.com/fayeed/flutter_parsed_text
 
 environment:
