@@ -61,8 +61,12 @@ class ParsedText extends StatelessWidget {
   /// SelectableText does not support softwrap, overflow, textScaleFactor
   final bool selectable;
 
+  /// onTap function for the whole widget
   final Function? onTap;
 
+  /// Global regex options for the whole string,
+  ///
+  /// Note: Removed support for regexOptions for MatchText and now it uses global regex options.
   final RegexOptions regexOptions;
 
   /// Creates a parsedText widget
