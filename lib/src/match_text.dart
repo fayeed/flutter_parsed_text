@@ -18,9 +18,6 @@ class MatchText {
   /// A custom [Function] to handle onTap.
   Function(String)? onTap;
 
-  /// A custom [Function] to handle onLongTap.
-  Function(String)? onLongTap;
-
   /// A callback function that takes two parameter String & pattern
   ///
   /// @param str - is the word that is being matched
@@ -42,17 +39,13 @@ class MatchText {
     required String pattern,
   })? renderWidget;
 
-  final RegexOptions regexOptions;
-
   /// Creates a MatchText object
   MatchText({
     this.type = ParsedType.CUSTOM,
     this.pattern,
     this.style,
     this.onTap,
-    this.onLongTap,
     this.renderText,
     this.renderWidget,
-    this.regexOptions = const RegexOptions(),
   });
 }
