@@ -63,6 +63,8 @@ class ParsedText extends StatelessWidget {
 
   final Function? onTap;
 
+  final RegexOptions regexOptions;
+
   /// Creates a parsedText widget
   ///
   /// [text] paramtere should not be null and is always required.
@@ -83,6 +85,7 @@ class ParsedText extends StatelessWidget {
     this.maxLines,
     this.onTap,
     this.selectable = false,
+    this.regexOptions = const RegexOptions(),
   }) : super(key: key);
 
   @override
@@ -90,156 +93,81 @@ class ParsedText extends StatelessWidget {
     // Seperate each word and create a new Array
     String newString = text;
 
-    // Parse the whole text and adds "%%%%" before and after the
-    // each matched text this will be used to split the text affectively
+    Map<String, MatchText> _mapping = Map<String, MatchText>();
+
     parse.forEach((e) {
       if (e.type == ParsedType.EMAIL) {
-        RegExp regExp = RegExp(emailPattern, multiLine: true);
-        newString = newString.splitMapJoin(regExp,
-            onMatch: (m) => "%%%%${m.group(0)}%%%%", onNonMatch: (m) => "$m");
+        _mapping[emailPattern] = e;
       } else if (e.type == ParsedType.PHONE) {
-        RegExp regExp = RegExp(phonePattern);
-        newString = newString.splitMapJoin(regExp,
-            onMatch: (m) => "%%%%${m.group(0)}%%%%", onNonMatch: (m) => "$m");
+        _mapping[phonePattern] = e;
       } else if (e.type == ParsedType.URL) {
-        RegExp regExp = RegExp(urlPattern);
-        newString = newString.splitMapJoin(regExp,
-            onMatch: (m) => "%%%%${m.group(0)}%%%%", onNonMatch: (m) => "$m");
-      } else if (e.type == ParsedType.CUSTOM) {
-        RegExp regExp = RegExp(e.pattern!,
-            multiLine: e.regexOptions.multiLine,
-            caseSensitive: e.regexOptions.caseSensitive,
-            unicode: e.regexOptions.unicode,
-            dotAll: e.regexOptions.dotAll);
-        newString = newString.splitMapJoin(regExp,
-            onMatch: (m) => "%%%%${m.group(0)}%%%%", onNonMatch: (m) => "$m");
+        _mapping[urlPattern] = e;
+      } else {
+        _mapping[e.pattern!] = e;
       }
     });
 
-    // splits the modified text at "%%%%"
-    List<String> splits = newString.split("%%%%");
+    final pattern = '(${_mapping.keys.toList().join('|')})';
 
-    // Map over the splits array to get a new Array with its elements as Widgets
-    // checks if each word matches either a predefined type of custom defined patterns
-    // if a match is found creates a link Text with its function or return a
-    // default Text
-    List<InlineSpan> widgets = splits.map<InlineSpan>((element) {
-      // Default Text object if not pattern is matched
-      InlineSpan widget = TextSpan(
-        text: "$element",
-      );
+    List<InlineSpan> widgets = [];
 
-      // loop over to find patterns
-      for (final e in parse) {
-        if (e.type == ParsedType.CUSTOM) {
-          final String pattern = e.pattern!;
-          RegExp customRegExp = RegExp(
-            pattern,
-            multiLine: e.regexOptions.multiLine,
-            caseSensitive: e.regexOptions.caseSensitive,
-            unicode: e.regexOptions.unicode,
-            dotAll: e.regexOptions.dotAll,
-          );
+    newString.splitMapJoin(
+        RegExp(
+          pattern,
+          multiLine: regexOptions.multiLine,
+          caseSensitive: regexOptions.caseSensitive,
+          dotAll: regexOptions.dotAll,
+          unicode: regexOptions.unicode,
+        ), onMatch: (Match match) {
+      final matchText = match[0];
 
-          bool matched = customRegExp.hasMatch(element);
+      final mapping = _mapping[matchText!] ??
+          _mapping[_mapping.keys.firstWhere((element) {
+            final reg = RegExp(element);
+            return reg.hasMatch(matchText);
+          })]!;
 
-          if (matched) {
-            if (e.renderText != null) {
-              Map<String, String> result =
-                  e.renderText!(str: element, pattern: pattern);
+      InlineSpan widget;
 
-              widget = WidgetSpan(
-                child: GestureDetector(
-                  onTap: () => e.onTap!(element),
-                  onLongPress: () => e.onLongTap!(element),
-                  child: Text(
-                    "${result['display']}",
-                    style: e.style != null ? e.style : style,
-                  ),
-                ),
-              );
-            } else if (e.renderWidget != null) {
-              widget = WidgetSpan(
-                alignment: PlaceholderAlignment.middle,
-                child: GestureDetector(
-                  onTap: () => e.onTap!(element),
-                  onLongPress: () => e.onLongTap!(element),
-                  child: e.renderWidget!(text: element, pattern: e.pattern!),
-                ),
-              );
-            } else {
-              widget = WidgetSpan(
-                child: GestureDetector(
-                  onTap: () => e.onTap!(element),
-                  onLongPress: () => e.onLongTap!(element),
-                  child: Text(
-                    "$element",
-                    style: e.style != null ? e.style : style,
-                  ),
-                ),
-              );
-            }
-            break;
-          }
-        } else if (e.type == ParsedType.EMAIL) {
-          RegExp emailRegExp = RegExp(emailPattern);
+      if (mapping.renderText != null) {
+        Map<String, String> result =
+            mapping.renderText!(str: matchText, pattern: pattern);
 
-          bool matched = emailRegExp.hasMatch(element);
-
-          if (matched) {
-            widget = WidgetSpan(
-              child: GestureDetector(
-                onTap: () => e.onTap!(element),
-                onLongPress: () => e.onLongTap!(element),
-                child: Text(
-                  "$element",
-                  style: e.style != null ? e.style : style,
-                ),
-              ),
-            );
-            break;
-          }
-        } else if (e.type == ParsedType.PHONE) {
-          RegExp phoneRegExp = RegExp(phonePattern);
-
-          bool matched = phoneRegExp.hasMatch(element);
-
-          if (matched) {
-            widget = WidgetSpan(
-              child: GestureDetector(
-                onTap: () => e.onTap!(element),
-                onLongPress: () => e.onLongTap!(element),
-                child: Text(
-                  "$element",
-                  style: e.style != null ? e.style : style,
-                ),
-              ),
-            );
-            break;
-          }
-        } else if (e.type == ParsedType.URL) {
-          RegExp urlRegExp = RegExp(urlPattern);
-
-          bool matched = urlRegExp.hasMatch(element);
-
-          if (matched) {
-            widget = WidgetSpan(
-              child: GestureDetector(
-                onTap: () => e.onTap!(element),
-                onLongPress: () => e.onLongTap!(element),
-                child: Text(
-                  "$element",
-                  style: e.style != null ? e.style : style,
-                ),
-              ),
-            );
-            break;
-          }
-        }
+        widget = TextSpan(
+          text: "${result['display']}",
+          style: mapping.style != null ? mapping.style : style,
+          recognizer: TapGestureRecognizer()
+            ..onTap = () => mapping.onTap!(matchText),
+        );
+      } else if (mapping.renderWidget != null) {
+        widget = WidgetSpan(
+          alignment: PlaceholderAlignment.middle,
+          child: GestureDetector(
+            onTap: () => mapping.onTap!(matchText),
+            child: mapping.renderWidget!(
+                text: matchText, pattern: mapping.pattern!),
+          ),
+        );
+      } else {
+        widget = TextSpan(
+          text: "$matchText",
+          style: mapping.style != null ? mapping.style : style,
+          recognizer: TapGestureRecognizer()
+            ..onTap = () => mapping.onTap!(matchText),
+        );
       }
 
-      return widget;
-    }).toList();
+      widgets.add(widget);
+
+      return '';
+    }, onNonMatch: (String text) {
+      widgets.add(TextSpan(
+        text: "$text",
+        style: this.style,
+      ));
+
+      return '';
+    });
 
     if (selectable) {
       return SelectableText.rich(
@@ -262,7 +190,11 @@ class ParsedText extends StatelessWidget {
       textWidthBasis: textWidthBasis,
       textAlign: alignment,
       textDirection: textDirection,
-      text: TextSpan(children: <InlineSpan>[...widgets], style: style),
+      text: TextSpan(
+        text: '',
+        children: <InlineSpan>[...widgets],
+        style: style,
+      ),
     );
   }
 }
