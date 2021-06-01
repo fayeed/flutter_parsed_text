@@ -116,62 +116,80 @@ class ParsedText extends StatelessWidget {
     List<InlineSpan> widgets = [];
 
     newString.splitMapJoin(
-        RegExp(
-          pattern,
-          multiLine: regexOptions.multiLine,
-          caseSensitive: regexOptions.caseSensitive,
-          dotAll: regexOptions.dotAll,
-          unicode: regexOptions.unicode,
-        ), onMatch: (Match match) {
-      final matchText = match[0];
+      RegExp(
+        pattern,
+        multiLine: regexOptions.multiLine,
+        caseSensitive: regexOptions.caseSensitive,
+        dotAll: regexOptions.dotAll,
+        unicode: regexOptions.unicode,
+      ),
+      onMatch: (Match match) {
+        final matchText = match[0];
 
-      final mapping = _mapping[matchText!] ??
-          _mapping[_mapping.keys.firstWhere((element) {
-            final reg = RegExp(element);
-            return reg.hasMatch(matchText);
-          })]!;
+        final mapping = _mapping[matchText!] ??
+            _mapping[_mapping.keys.firstWhere((element) {
+              final reg = RegExp(
+                element,
+                multiLine: regexOptions.multiLine,
+                caseSensitive: regexOptions.caseSensitive,
+                dotAll: regexOptions.dotAll,
+                unicode: regexOptions.unicode,
+              );
+              return reg.hasMatch(matchText);
+            }, orElse: () {
+              return '';
+            })];
 
-      InlineSpan widget;
+        InlineSpan widget;
 
-      if (mapping.renderText != null) {
-        Map<String, String> result =
-            mapping.renderText!(str: matchText, pattern: pattern);
+        if (mapping != null) {
+          if (mapping.renderText != null) {
+            Map<String, String> result =
+                mapping.renderText!(str: matchText, pattern: pattern);
 
-        widget = TextSpan(
-          text: "${result['display']}",
-          style: mapping.style != null ? mapping.style : style,
-          recognizer: TapGestureRecognizer()
-            ..onTap = () => mapping.onTap!(matchText),
-        );
-      } else if (mapping.renderWidget != null) {
-        widget = WidgetSpan(
-          alignment: PlaceholderAlignment.middle,
-          child: GestureDetector(
-            onTap: () => mapping.onTap!(matchText),
-            child: mapping.renderWidget!(
-                text: matchText, pattern: mapping.pattern!),
-          ),
-        );
-      } else {
-        widget = TextSpan(
-          text: "$matchText",
-          style: mapping.style != null ? mapping.style : style,
-          recognizer: TapGestureRecognizer()
-            ..onTap = () => mapping.onTap!(matchText),
-        );
-      }
+            widget = TextSpan(
+              text: "${result['display']}",
+              style: mapping.style != null ? mapping.style : style,
+              recognizer: TapGestureRecognizer()
+                ..onTap = () => mapping.onTap!(matchText),
+            );
+          } else if (mapping.renderWidget != null) {
+            widget = WidgetSpan(
+              alignment: PlaceholderAlignment.middle,
+              child: GestureDetector(
+                onTap: () => mapping.onTap!(matchText),
+                child: mapping.renderWidget!(
+                    text: matchText, pattern: mapping.pattern!),
+              ),
+            );
+          } else {
+            widget = TextSpan(
+              text: "$matchText",
+              style: mapping.style != null ? mapping.style : style,
+              recognizer: TapGestureRecognizer()
+                ..onTap = () => mapping.onTap!(matchText),
+            );
+          }
+        } else {
+          widget = TextSpan(
+            text: "$matchText",
+            style: this.style,
+          );
+        }
 
-      widgets.add(widget);
+        widgets.add(widget);
 
-      return '';
-    }, onNonMatch: (String text) {
-      widgets.add(TextSpan(
-        text: "$text",
-        style: this.style,
-      ));
+        return '';
+      },
+      onNonMatch: (String text) {
+        widgets.add(TextSpan(
+          text: "$text",
+          style: this.style,
+        ));
 
-      return '';
-    });
+        return '';
+      },
+    );
 
     if (selectable) {
       return SelectableText.rich(
