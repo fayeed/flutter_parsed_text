@@ -1,3 +1,7 @@
+## [2.2.1]
+
+- Fixes the issue where having an empty list of parse (MatchText) or not being able to find the mapping for the pattern lead the widget to crash.
+
 ## [2.2.0]
 
 - Removed regexOptions property from MatchText and now comes with a global regexOptions property for ParsedText Widget.
