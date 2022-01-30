@@ -151,7 +151,10 @@ class ParsedText extends StatelessWidget {
               text: "${result['display']}",
               style: mapping.style != null ? mapping.style : style,
               recognizer: TapGestureRecognizer()
-                ..onTap = () => mapping.onTap!(matchText),
+                ..onTap = () {
+                  final value = result['value'] ?? matchText;
+                  mapping.onTap?.call(value);
+                },
             );
           } else if (mapping.renderWidget != null) {
             widget = WidgetSpan(
