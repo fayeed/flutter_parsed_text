@@ -70,6 +70,7 @@ class ParsedText extends StatelessWidget {
   final RegexOptions regexOptions;
 
   /// Configuration of toolbar options.
+  /// In Effect only if param [selectable] is set true
   ///
   /// Paste and cut will be disabled regardless.
   ///
