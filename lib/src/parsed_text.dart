@@ -69,6 +69,14 @@ class ParsedText extends StatelessWidget {
   /// Note: Removed support for regexOptions for MatchText and now it uses global regex options.
   final RegexOptions regexOptions;
 
+  /// Configuration of toolbar options.
+  /// In Effect only if param [selectable] is set true
+  ///
+  /// Paste and cut will be disabled regardless.
+  ///
+  /// If not set, select all and copy will be enabled by default.
+  final ToolbarOptions? toolbarOptions;
+
   /// Creates a parsedText widget
   ///
   /// [text] paramtere should not be null and is always required.
@@ -90,6 +98,7 @@ class ParsedText extends StatelessWidget {
     this.onTap,
     this.selectable = false,
     this.regexOptions = const RegexOptions(),
+    this.toolbarOptions,
   }) : super(key: key);
 
   @override
@@ -203,6 +212,8 @@ class ParsedText extends StatelessWidget {
         textAlign: alignment,
         textDirection: textDirection,
         onTap: onTap as void Function()?,
+        textScaleFactor: textScaleFactor,
+        toolbarOptions: toolbarOptions,
       );
     }
 
