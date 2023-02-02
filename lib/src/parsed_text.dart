@@ -160,7 +160,9 @@ class ParsedText extends StatelessWidget {
             widget = WidgetSpan(
               alignment: PlaceholderAlignment.middle,
               child: GestureDetector(
-                onTap: () => mapping.onTap!(matchText),
+                onTap: mapping.onTap != null
+                    ? () => mapping.onTap!(matchText)
+                    : null,
                 child: mapping.renderWidget!(
                     text: matchText, pattern: mapping.pattern!),
               ),
@@ -170,7 +172,9 @@ class ParsedText extends StatelessWidget {
               text: "$matchText",
               style: mapping.style != null ? mapping.style : style,
               recognizer: TapGestureRecognizer()
-                ..onTap = () => mapping.onTap!(matchText),
+                ..onTap = mapping.onTap != null
+                    ? () => mapping.onTap!(matchText)
+                    : null,
             );
           }
         } else {
