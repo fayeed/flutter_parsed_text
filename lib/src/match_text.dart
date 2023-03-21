@@ -27,6 +27,9 @@ class MatchText {
   /// and @michel the value to display on interface.
   /// Your pattern for ID & username extraction : `/\[(@[^:]+):([^\]]+)\]/`i
   /// Displayed text will be : Mention `@michel`
+  /// you must return a map with two keys
+  /// [display] - the text you want to show to the user
+  /// [value] - the value underneath it
   Map<String, String> Function({
     required String str,
     required String pattern,
