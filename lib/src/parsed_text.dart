@@ -144,33 +144,51 @@ class ParsedText extends StatelessWidget {
 
         if (mapping != null) {
           if (mapping.renderText != null) {
-            Map<String, String> result =
-                mapping.renderText!(str: matchText, pattern: pattern);
+            Map<String, String> result = mapping.renderText!(str: matchText, pattern: pattern);
+
+            TapGestureRecognizer? recognizer;
+
+            if (mapping.onTap != null) {
+              recognizer = TapGestureRecognizer();
+              recognizer.onTap = () {
+                final value = result['value'] ?? matchText;
+                mapping.onTap?.call(value);
+              };
+            }
 
             widget = TextSpan(
               text: "${result['display']}",
               style: mapping.style != null ? mapping.style : style,
-              recognizer: TapGestureRecognizer()
-                ..onTap = () {
-                  final value = result['value'] ?? matchText;
-                  mapping.onTap?.call(value);
-                },
+              recognizer: recognizer,
             );
           } else if (mapping.renderWidget != null) {
+            Widget child = mapping.renderWidget!(text: matchText, pattern: mapping.pattern!);
+
+            if (mapping.onTap != null) {
+              child = GestureDetector(
+                onTap: () => mapping.onTap!(matchText),
+                child: child,
+              );
+            }
+
             widget = WidgetSpan(
               alignment: PlaceholderAlignment.middle,
-              child: GestureDetector(
-                onTap: () => mapping.onTap!(matchText),
-                child: mapping.renderWidget!(
-                    text: matchText, pattern: mapping.pattern!),
-              ),
+              child: child,
             );
           } else {
+            TapGestureRecognizer? recognizer;
+
+            if (mapping.onTap != null) {
+              recognizer = TapGestureRecognizer();
+              recognizer.onTap = () {
+                mapping.onTap!(matchText);
+              };
+            }
+
             widget = TextSpan(
               text: "$matchText",
               style: mapping.style != null ? mapping.style : style,
-              recognizer: TapGestureRecognizer()
-                ..onTap = () => mapping.onTap!(matchText),
+              recognizer: recognizer,
             );
           }
         } else {
