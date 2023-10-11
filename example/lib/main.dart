@@ -1,16 +1,17 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parsed_text/flutter_parsed_text.dart';
-import 'package:url_launcher/url_launcher.dart' show canLaunch, launch;
+import 'package:url_launcher/url_launcher.dart';
 
 main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'example_app',
       home: MainApp(),
     );
@@ -18,6 +19,8 @@ class MyApp extends StatelessWidget {
 }
 
 class MainApp extends StatefulWidget {
+  const MainApp({super.key});
+
   @override
   _MainAppState createState() => _MainAppState();
 }
@@ -28,7 +31,7 @@ class _MainAppState extends State<MainApp> {
     return Scaffold(
       body: Column(
         children: <Widget>[
-          SizedBox(
+          const SizedBox(
             height: 40.0,
           ),
           Padding(
@@ -47,56 +50,52 @@ class _MainAppState extends State<MainApp> {
               parse: <MatchText>[
                 MatchText(
                     type: ParsedType.EMAIL,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.red,
                       fontSize: 24,
                     ),
                     onTap: (url) {
-                      launch("mailto:" + url);
+                      _launchUrl(url);
                     }),
                 MatchText(
                     type: ParsedType.URL,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.blue,
                       fontSize: 24,
                     ),
-                    onTap: (url) async {
-                      var a = await canLaunch(url);
-
-                      if (a) {
-                        launch(url);
-                      }
+                    onTap: (url) {
+                      _launchUrl(url);
                     }),
                 MatchText(
                     type: ParsedType.PHONE,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.red,
                       fontSize: 24,
                     ),
                     onTap: (url) {
-                      launch("tel:" + url);
+                      _launchUrl(url);
                     }),
                 MatchText(
                   type: ParsedType.CUSTOM,
                   pattern:
                       r"^(?:http|https):\/\/[\w\-_]+(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)",
-                  style: TextStyle(color: Colors.lime),
+                  style: const TextStyle(color: Colors.lime),
                   onTap: (url) => print(url),
                 ),
                 MatchText(
                     type: ParsedType.CUSTOM,
                     pattern:
                         "(---( )?(`)?spoiler(`)?( )?---)\n\n(.*?)\n( )?(---( )?(`)?spoiler(`)?( )?---)",
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.purple,
                       fontSize: 50,
                     ),
                     onTap: (url) {
-                      launch("tel:" + url);
+                      _launchUrl(url);
                     }),
                 MatchText(
                   pattern: r"\[(@[^:]+):([^\]]+)\]",
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.green,
                     fontSize: 24,
                   ),
@@ -117,18 +116,19 @@ class _MainAppState extends State<MainApp> {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        Map<String, String> map = Map<String, String>();
                         RegExp customRegExp = RegExp(r"\[(@[^:]+):([^\]]+)\]");
                         Match match = customRegExp.firstMatch(url)!;
                         // return object of type Dialog
                         return AlertDialog(
-                          title: new Text("Mentions clicked"),
-                          content: new Text("${match.group(1)!} clicked."),
+                          title: const Text("Mentions clicked"),
+                          content: Text("${match.group(1)!} clicked."),
                           actions: <Widget>[
                             // usually buttons at the bottom of the dialog
-                            new FlatButton(
-                              child: new Text("Close"),
-                              onPressed: () {},
+                            FilledButton(
+                              child: const Text("Close"),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
                             ),
                           ],
                         );
@@ -141,7 +141,7 @@ class _MainAppState extends State<MainApp> {
                 ),
                 MatchText(
                   pattern: r"\B#+([\w]+)\b",
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.pink,
                     fontSize: 24,
                   ),
@@ -151,13 +151,15 @@ class _MainAppState extends State<MainApp> {
                       builder: (BuildContext context) {
                         // return object of type Dialog
                         return AlertDialog(
-                          title: new Text("Hashtag clicked"),
-                          content: new Text("$url clicked."),
+                          title: const Text("Hashtag clicked"),
+                          content: Text("$url clicked."),
                           actions: <Widget>[
                             // usually buttons at the bottom of the dialog
-                            new FlatButton(
-                              child: new Text("Close"),
-                              onPressed: () {},
+                            FilledButton(
+                              child: const Text("Close"),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
                             ),
                           ],
                         );
@@ -170,13 +172,13 @@ class _MainAppState extends State<MainApp> {
                 ),
                 MatchText(
                     pattern: r"lon",
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.pink,
                       fontSize: 24,
                     ),
                     onTap: (url) async {})
               ],
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 24,
                 color: Colors.black,
               ),
@@ -185,5 +187,11 @@ class _MainAppState extends State<MainApp> {
         ],
       ),
     );
+  }
+
+  _launchUrl(url) async {
+    if (!await launchUrl(Uri.parse(url))) {
+      throw Exception('Could not launch $url');
+    }
   }
 }
