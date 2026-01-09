@@ -36,11 +36,11 @@ class ParsedText extends StatelessWidget {
   /// How visual overflow should be handled.
   final TextOverflow overflow;
 
-  /// The number of font pixels for each logical pixel.
+  /// The font scaling strategy to use when laying out and rendering the text.
   ///
-  /// For example, if the text scale factor is 1.5, text will be 50% larger than
-  /// the specified font size.
-  final double textScaleFactor;
+  /// The value usually comes from [MediaQuery.textScalerOf], which provides
+  /// the [TextScaler] to use based on the user's platform preferences.
+  final TextScaler textScaler;
 
   /// An optional maximum number of lines for the text to span, wrapping if necessary.
   /// If the text exceeds the given number of lines, it will be truncated according
@@ -83,7 +83,7 @@ class ParsedText extends StatelessWidget {
     this.textDirection,
     this.softWrap = true,
     this.overflow = TextOverflow.clip,
-    this.textScaleFactor = 1.0,
+    this.textScaler = TextScaler.noScaling,
     this.strutStyle,
     this.textWidthBasis = TextWidthBasis.parent,
     this.maxLines,
@@ -97,21 +97,21 @@ class ParsedText extends StatelessWidget {
     // Seperate each word and create a new Array
     String newString = text;
 
-    Map<String, MatchText> _mapping = Map<String, MatchText>();
+    final Map<String, MatchText> mapping = <String, MatchText>{};
 
     parse.forEach((e) {
       if (e.type == ParsedType.EMAIL) {
-        _mapping[emailPattern] = e;
+        mapping[emailPattern] = e;
       } else if (e.type == ParsedType.PHONE) {
-        _mapping[phonePattern] = e;
+        mapping[phonePattern] = e;
       } else if (e.type == ParsedType.URL) {
-        _mapping[urlPattern] = e;
+        mapping[urlPattern] = e;
       } else {
-        _mapping[e.pattern!] = e;
+        mapping[e.pattern!] = e;
       }
     });
 
-    final pattern = '(${_mapping.keys.toList().join('|')})';
+    final pattern = '(${mapping.keys.join('|')})';
 
     List<InlineSpan> widgets = [];
 
@@ -126,8 +126,8 @@ class ParsedText extends StatelessWidget {
       onMatch: (Match match) {
         final matchText = match[0];
 
-        final mapping = _mapping[matchText!] ??
-            _mapping[_mapping.keys.firstWhere((element) {
+        final mapping = mapping[matchText!] ??
+            mapping[mapping.keys.firstWhere((element) {
               final reg = RegExp(
                 element,
                 multiLine: regexOptions.multiLine,
@@ -209,7 +209,7 @@ class ParsedText extends StatelessWidget {
     return RichText(
       softWrap: softWrap,
       overflow: overflow,
-      textScaleFactor: textScaleFactor,
+      textScaler: textScaler,
       maxLines: maxLines,
       strutStyle: strutStyle,
       textWidthBasis: textWidthBasis,
