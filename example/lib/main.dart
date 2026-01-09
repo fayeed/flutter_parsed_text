@@ -39,6 +39,27 @@ class _MainAppState extends State<MainApp> {
               // Enable dotAll so that .* patterns can match across newlines
               // This is required for multiline patterns like spoiler blocks
               regexOptions: const RegexOptions(dotAll: true),
+              // Custom context menu with additional options
+              contextMenuBuilder: (context, editableTextState) {
+                return AdaptiveTextSelectionToolbar.buttonItems(
+                  anchors: editableTextState.contextMenuAnchors,
+                  buttonItems: [
+                    // Include default buttons (Copy, Select All, etc.)
+                    ...editableTextState.contextMenuButtonItems,
+                    // Add custom button
+                    ContextMenuButtonItem(
+                      label: 'Search',
+                      onPressed: () {
+                        final selectedText = editableTextState
+                            .textEditingValue.selection
+                            .textInside(editableTextState.textEditingValue.text);
+                        debugPrint('Search for: $selectedText');
+                        editableTextState.hideToolbar();
+                      },
+                    ),
+                  ],
+                );
+              },
               text:
                   "[@michael:51515151] Hello  --- spoiler ---\n\n spoiler content \n--- spoiler ---\n  https://172.0.0.1 london this is https://apps.apple.com/id/app/facebook/id284882215  an example of the ParsedText, links like http://www.google.com or http://www.facebook.com are clickable and phone number 444-555-6666 can call too. But you can also do more with this package, for example Bob will change style and David too.\nAlso a US number example +1-(800)-831-1117. foo@gmail.com And the magic number is 42! #flutter #flutterdev",
               parse: <MatchText>[

@@ -67,6 +67,46 @@ class ParsedText extends StatefulWidget {
   /// Global regex options for pattern matching.
   final RegexOptions regexOptions;
 
+  /// {@macro flutter.widgets.EditableText.contextMenuBuilder}
+  ///
+  /// Use this to customize the context menu that appears when text is selected.
+  /// Only applies when [selectable] is `true`.
+  ///
+  /// Example:
+  /// ```dart
+  /// ParsedText(
+  ///   text: 'Hello world',
+  ///   selectable: true,
+  ///   contextMenuBuilder: (context, editableTextState) {
+  ///     return AdaptiveTextSelectionToolbar.buttonItems(
+  ///       anchors: editableTextState.contextMenuAnchors,
+  ///       buttonItems: [
+  ///         ...editableTextState.contextMenuButtonItems,
+  ///         ContextMenuButtonItem(
+  ///           label: 'Custom Action',
+  ///           onPressed: () {
+  ///             // Handle custom action
+  ///             editableTextState.hideToolbar();
+  ///           },
+  ///         ),
+  ///       ],
+  ///     );
+  ///   },
+  /// )
+  /// ```
+  final EditableTextContextMenuBuilder? contextMenuBuilder;
+
+  /// {@macro flutter.widgets.EditableText.selectionControls}
+  ///
+  /// Use this to customize selection handles and toolbar.
+  /// Only applies when [selectable] is `true`.
+  final TextSelectionControls? selectionControls;
+
+  /// Called when the user changes the selection of text.
+  ///
+  /// Only applies when [selectable] is `true`.
+  final SelectionChangedCallback? onSelectionChanged;
+
   /// Creates a ParsedText widget.
   ///
   /// [text] parameter should not be null and is always required.
@@ -88,6 +128,9 @@ class ParsedText extends StatefulWidget {
     this.onTap,
     this.selectable = false,
     this.regexOptions = const RegexOptions(),
+    this.contextMenuBuilder,
+    this.selectionControls,
+    this.onSelectionChanged,
   }) : super(key: key);
 
   @override
@@ -290,6 +333,9 @@ class _ParsedTextState extends State<ParsedText> {
         textDirection: widget.textDirection,
         textScaler: widget.textScaler,
         onTap: widget.onTap,
+        contextMenuBuilder: widget.contextMenuBuilder,
+        selectionControls: widget.selectionControls,
+        onSelectionChanged: widget.onSelectionChanged,
       );
     }
 
@@ -318,6 +364,9 @@ class _ParsedTextState extends State<ParsedText> {
         textDirection: widget.textDirection,
         textScaler: widget.textScaler,
         onTap: widget.onTap,
+        contextMenuBuilder: widget.contextMenuBuilder,
+        selectionControls: widget.selectionControls,
+        onSelectionChanged: widget.onSelectionChanged,
       );
     }
     return RichText(

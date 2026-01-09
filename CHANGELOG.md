@@ -13,6 +13,9 @@
 
 - Added `onLongPress` callback support for `MatchText`
 - Added `textScaler` parameter to `SelectableText` variants
+- Added `contextMenuBuilder` parameter for custom context menus when text is selectable (fixes [#32](https://github.com/fayeed/flutter_parsed_text/issues/32))
+- Added `selectionControls` parameter for custom selection handles
+- Added `onSelectionChanged` callback for selection change events
 
 ### Bug Fixes
 
