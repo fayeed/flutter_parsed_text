@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parsed_text/flutter_parsed_text.dart';
-import 'package:url_launcher/url_launcher.dart' show canLaunch, launch;
+import 'package:url_launcher/url_launcher.dart';
 
 main() {
   runApp(MyApp());
@@ -36,12 +36,30 @@ class _MainAppState extends State<MainApp> {
             child: ParsedText(
               selectable: true,
               alignment: TextAlign.start,
-              // regexOptions: RegexOptions(
-              //   caseSensitive: false,
-              //   multiLine: true,
-              //   dotAll: false,
-              //   unicode: false,
-              // ),
+              // Enable dotAll so that .* patterns can match across newlines
+              // This is required for multiline patterns like spoiler blocks
+              regexOptions: const RegexOptions(dotAll: true),
+              // Custom context menu with additional options
+              contextMenuBuilder: (context, editableTextState) {
+                return AdaptiveTextSelectionToolbar.buttonItems(
+                  anchors: editableTextState.contextMenuAnchors,
+                  buttonItems: [
+                    // Include default buttons (Copy, Select All, etc.)
+                    ...editableTextState.contextMenuButtonItems,
+                    // Add custom button
+                    ContextMenuButtonItem(
+                      label: 'Search',
+                      onPressed: () {
+                        final selectedText = editableTextState
+                            .textEditingValue.selection
+                            .textInside(editableTextState.textEditingValue.text);
+                        debugPrint('Search for: $selectedText');
+                        editableTextState.hideToolbar();
+                      },
+                    ),
+                  ],
+                );
+              },
               text:
                   "[@michael:51515151] Hello  --- spoiler ---\n\n spoiler content \n--- spoiler ---\n  https://172.0.0.1 london this is https://apps.apple.com/id/app/facebook/id284882215  an example of the ParsedText, links like http://www.google.com or http://www.facebook.com are clickable and phone number 444-555-6666 can call too. But you can also do more with this package, for example Bob will change style and David too.\nAlso a US number example +1-(800)-831-1117. foo@gmail.com And the magic number is 42! #flutter #flutterdev",
               parse: <MatchText>[
@@ -52,7 +70,7 @@ class _MainAppState extends State<MainApp> {
                       fontSize: 24,
                     ),
                     onTap: (url) {
-                      launch("mailto:" + url);
+                      launchUrl(Uri.parse("mailto:$url"));
                     }),
                 MatchText(
                     type: ParsedType.URL,
@@ -61,10 +79,9 @@ class _MainAppState extends State<MainApp> {
                       fontSize: 24,
                     ),
                     onTap: (url) async {
-                      var a = await canLaunch(url);
-
-                      if (a) {
-                        launch(url);
+                      final uri = Uri.parse(url);
+                      if (await canLaunchUrl(uri)) {
+                        launchUrl(uri);
                       }
                     }),
                 MatchText(
@@ -74,7 +91,7 @@ class _MainAppState extends State<MainApp> {
                       fontSize: 24,
                     ),
                     onTap: (url) {
-                      launch("tel:" + url);
+                      launchUrl(Uri.parse("tel:$url"));
                     }),
                 MatchText(
                   type: ParsedType.CUSTOM,
@@ -83,16 +100,17 @@ class _MainAppState extends State<MainApp> {
                   style: TextStyle(color: Colors.lime),
                   onTap: (url) => print(url),
                 ),
+                // Multiline spoiler pattern - requires regexOptions.dotAll = true
                 MatchText(
-                    type: ParsedType.CUSTOM,
-                    pattern:
-                        "(---( )?(`)?spoiler(`)?( )?---)\n\n(.*?)\n( )?(---( )?(`)?spoiler(`)?( )?---)",
-                    style: TextStyle(
+                    pattern: r"--- spoiler ---.*?--- spoiler ---",
+                    style: const TextStyle(
                       color: Colors.purple,
-                      fontSize: 50,
+                      fontSize: 18,
+                      backgroundColor: Colors.purple,
                     ),
-                    onTap: (url) {
-                      launch("tel:" + url);
+                    onTap: (text) {
+                      // Show spoiler content when tapped
+                      debugPrint('Spoiler tapped: $text');
                     }),
                 MatchText(
                   pattern: r"\[(@[^:]+):([^\]]+)\]",
@@ -117,18 +135,17 @@ class _MainAppState extends State<MainApp> {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        Map<String, String> map = Map<String, String>();
-                        RegExp customRegExp = RegExp(r"\[(@[^:]+):([^\]]+)\]");
-                        Match match = customRegExp.firstMatch(url)!;
+                        final customRegExp = RegExp(r"\[(@[^:]+):([^\]]+)\]");
+                        final match = customRegExp.firstMatch(url)!;
                         // return object of type Dialog
                         return AlertDialog(
-                          title: new Text("Mentions clicked"),
-                          content: new Text("${match.group(1)!} clicked."),
+                          title: const Text("Mentions clicked"),
+                          content: Text("${match.group(1)!} clicked."),
                           actions: <Widget>[
                             // usually buttons at the bottom of the dialog
-                            new FlatButton(
-                              child: new Text("Close"),
-                              onPressed: () {},
+                            TextButton(
+                              child: const Text("Close"),
+                              onPressed: () => Navigator.of(context).pop(),
                             ),
                           ],
                         );
@@ -151,13 +168,13 @@ class _MainAppState extends State<MainApp> {
                       builder: (BuildContext context) {
                         // return object of type Dialog
                         return AlertDialog(
-                          title: new Text("Hashtag clicked"),
-                          content: new Text("$url clicked."),
+                          title: const Text("Hashtag clicked"),
+                          content: Text("$url clicked."),
                           actions: <Widget>[
                             // usually buttons at the bottom of the dialog
-                            new FlatButton(
-                              child: new Text("Close"),
-                              onPressed: () {},
+                            TextButton(
+                              child: const Text("Close"),
+                              onPressed: () => Navigator.of(context).pop(),
                             ),
                           ],
                         );
