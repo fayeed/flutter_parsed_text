@@ -1,3 +1,39 @@
+## [3.0.0]
+
+### Breaking Changes
+
+- **Dart SDK**: Now requires Dart 3.0.0 or higher
+- **Flutter SDK**: Now requires Flutter 3.10.0 or higher
+- `textScaleFactor` parameter renamed to `textScaler` (use `TextScaler.linear(factor)` for migration)
+- `onTap` parameter type changed from `Function?` to `void Function()?` for type safety
+- `ParsedText` is now a `StatefulWidget` (for proper gesture recognizer disposal)
+- `MatchText` class is now immutable (all fields are `final`)
+
+### New Features
+
+- Added `onLongPress` callback support for `MatchText`
+- Added `textScaler` parameter to `SelectableText` variants
+
+### Bug Fixes
+
+- Fixed URL regex pattern to properly handle URLs with commas (fixes [#19](https://github.com/fayeed/flutter_parsed_text/issues/19))
+- Fixed malformed URL regex that was treating `http(s)?` as a character class
+- Improved phone number regex to be more precise and avoid false positives
+- Updated email regex to support longer TLDs (up to 63 characters)
+- Fixed variable shadowing bug that could cause incorrect pattern matching
+- Fixed null safety issues where `onTap` was force-unwrapped causing crashes
+- Fixed `renderWidget` pattern access for predefined types (EMAIL, PHONE, URL)
+- Fixed memory leak from undisposed `TapGestureRecognizer` instances
+- Fixed crash when using empty parse list
+- Fixed crash when using empty or null patterns with CUSTOM type
+- Properly handle empty text input
+
+### Improvements
+
+- Added `flutter_lints` for static analysis
+- Improved documentation across all classes
+- Code cleanup and modernization for Dart 3.x
+
 ## [2.2.1]
 
 - Fixes the issue where having an empty list of parse (MatchText) or not being able to find the mapping for the pattern lead the widget to crash.
