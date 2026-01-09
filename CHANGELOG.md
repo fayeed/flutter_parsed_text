@@ -13,7 +13,7 @@
 
 - Added `onLongPress` callback support for `MatchText`
 - Added `textScaler` parameter to `SelectableText` variants
-- Added `contextMenuBuilder` parameter for custom context menus when text is selectable (fixes [#32](https://github.com/fayeed/flutter_parsed_text/issues/32))
+- Added `contextMenuBuilder` parameter for custom context menus when text is selectable (fixes [#32](https://github.com/fayeed/flutter_parsed_text/issues/32), [#46](https://github.com/fayeed/flutter_parsed_text/issues/46))
 - Added `selectionControls` parameter for custom selection handles
 - Added `onSelectionChanged` callback for selection change events
 
@@ -37,6 +37,8 @@
 - Improved documentation across all classes
 - Added comprehensive documentation for `RegexOptions` with examples for multiline matching (relates to [#11](https://github.com/fayeed/flutter_parsed_text/issues/11))
 - Updated example app to properly demonstrate multiline spoiler pattern with `dotAll: true`
+- Added `Semantics` wrapper for `renderWidget` to improve accessibility (relates to [#45](https://github.com/fayeed/flutter_parsed_text/issues/45))
+- Documented `renderWidget` copy-paste limitation and suggested `renderText` as alternative
 - Code cleanup and modernization for Dart 3.x
 
 ## [2.2.1]

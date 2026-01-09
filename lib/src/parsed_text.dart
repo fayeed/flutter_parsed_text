@@ -287,16 +287,19 @@ class _ParsedTextState extends State<ParsedText> {
         } else if (matchedConfig.renderWidget != null) {
           spans.add(WidgetSpan(
             alignment: PlaceholderAlignment.middle,
-            child: GestureDetector(
-              onTap: matchedConfig.onTap != null
-                  ? () => matchedConfig.onTap!(matchText)
-                  : null,
-              onLongPress: matchedConfig.onLongPress != null
-                  ? () => matchedConfig.onLongPress!(matchText)
-                  : null,
-              child: matchedConfig.renderWidget!(
-                text: matchText,
-                pattern: actualPattern,
+            child: Semantics(
+              label: matchText,
+              child: GestureDetector(
+                onTap: matchedConfig.onTap != null
+                    ? () => matchedConfig.onTap!(matchText)
+                    : null,
+                onLongPress: matchedConfig.onLongPress != null
+                    ? () => matchedConfig.onLongPress!(matchText)
+                    : null,
+                child: matchedConfig.renderWidget!(
+                  text: matchText,
+                  pattern: actualPattern,
+                ),
               ),
             ),
           ));

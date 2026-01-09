@@ -45,6 +45,17 @@ class MatchText {
 
   /// A callback function that takes the [text] that matches the [pattern] and returns
   /// the [Widget] to be displayed inside a [WidgetSpan].
+  ///
+  /// **Note on copy-paste behavior:** When using `renderWidget`, the matched text
+  /// is replaced with a widget. If the user copies text containing this widget,
+  /// it will appear as an object replacement character (often shown as `[obj]`)
+  /// when pasted. This is a Flutter limitation with [WidgetSpan].
+  ///
+  /// If you need copy-paste to preserve the original text, consider using
+  /// [renderText] instead, which allows you to transform the displayed text
+  /// while keeping it as actual text that can be copied.
+  ///
+  /// See also: [#45](https://github.com/fayeed/flutter_parsed_text/issues/45)
   final Widget Function({
     required String text,
     required String pattern,
