@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parsed_text/flutter_parsed_text.dart';
-import 'package:url_launcher/url_launcher.dart' show canLaunch, launch;
+import 'package:url_launcher/url_launcher.dart';
 
 main() {
   runApp(MyApp());
@@ -52,7 +52,7 @@ class _MainAppState extends State<MainApp> {
                       fontSize: 24,
                     ),
                     onTap: (url) {
-                      launch("mailto:" + url);
+                      launchUrl(Uri.parse("mailto:$url"));
                     }),
                 MatchText(
                     type: ParsedType.URL,
@@ -61,10 +61,9 @@ class _MainAppState extends State<MainApp> {
                       fontSize: 24,
                     ),
                     onTap: (url) async {
-                      var a = await canLaunch(url);
-
-                      if (a) {
-                        launch(url);
+                      final uri = Uri.parse(url);
+                      if (await canLaunchUrl(uri)) {
+                        launchUrl(uri);
                       }
                     }),
                 MatchText(
@@ -74,7 +73,7 @@ class _MainAppState extends State<MainApp> {
                       fontSize: 24,
                     ),
                     onTap: (url) {
-                      launch("tel:" + url);
+                      launchUrl(Uri.parse("tel:$url"));
                     }),
                 MatchText(
                   type: ParsedType.CUSTOM,
@@ -92,7 +91,7 @@ class _MainAppState extends State<MainApp> {
                       fontSize: 50,
                     ),
                     onTap: (url) {
-                      launch("tel:" + url);
+                      launchUrl(Uri.parse("tel:$url"));
                     }),
                 MatchText(
                   pattern: r"\[(@[^:]+):([^\]]+)\]",
@@ -117,18 +116,17 @@ class _MainAppState extends State<MainApp> {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        Map<String, String> map = Map<String, String>();
-                        RegExp customRegExp = RegExp(r"\[(@[^:]+):([^\]]+)\]");
-                        Match match = customRegExp.firstMatch(url)!;
+                        final customRegExp = RegExp(r"\[(@[^:]+):([^\]]+)\]");
+                        final match = customRegExp.firstMatch(url)!;
                         // return object of type Dialog
                         return AlertDialog(
-                          title: new Text("Mentions clicked"),
-                          content: new Text("${match.group(1)!} clicked."),
+                          title: const Text("Mentions clicked"),
+                          content: Text("${match.group(1)!} clicked."),
                           actions: <Widget>[
                             // usually buttons at the bottom of the dialog
-                            new FlatButton(
-                              child: new Text("Close"),
-                              onPressed: () {},
+                            TextButton(
+                              child: const Text("Close"),
+                              onPressed: () => Navigator.of(context).pop(),
                             ),
                           ],
                         );
@@ -151,13 +149,13 @@ class _MainAppState extends State<MainApp> {
                       builder: (BuildContext context) {
                         // return object of type Dialog
                         return AlertDialog(
-                          title: new Text("Hashtag clicked"),
-                          content: new Text("$url clicked."),
+                          title: const Text("Hashtag clicked"),
+                          content: Text("$url clicked."),
                           actions: <Widget>[
                             // usually buttons at the bottom of the dialog
-                            new FlatButton(
-                              child: new Text("Close"),
-                              onPressed: () {},
+                            TextButton(
+                              child: const Text("Close"),
+                              onPressed: () => Navigator.of(context).pop(),
                             ),
                           ],
                         );
