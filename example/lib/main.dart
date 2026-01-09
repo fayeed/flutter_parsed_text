@@ -36,12 +36,9 @@ class _MainAppState extends State<MainApp> {
             child: ParsedText(
               selectable: true,
               alignment: TextAlign.start,
-              // regexOptions: RegexOptions(
-              //   caseSensitive: false,
-              //   multiLine: true,
-              //   dotAll: false,
-              //   unicode: false,
-              // ),
+              // Enable dotAll so that .* patterns can match across newlines
+              // This is required for multiline patterns like spoiler blocks
+              regexOptions: const RegexOptions(dotAll: true),
               text:
                   "[@michael:51515151] Hello  --- spoiler ---\n\n spoiler content \n--- spoiler ---\n  https://172.0.0.1 london this is https://apps.apple.com/id/app/facebook/id284882215  an example of the ParsedText, links like http://www.google.com or http://www.facebook.com are clickable and phone number 444-555-6666 can call too. But you can also do more with this package, for example Bob will change style and David too.\nAlso a US number example +1-(800)-831-1117. foo@gmail.com And the magic number is 42! #flutter #flutterdev",
               parse: <MatchText>[
@@ -82,16 +79,17 @@ class _MainAppState extends State<MainApp> {
                   style: TextStyle(color: Colors.lime),
                   onTap: (url) => print(url),
                 ),
+                // Multiline spoiler pattern - requires regexOptions.dotAll = true
                 MatchText(
-                    type: ParsedType.CUSTOM,
-                    pattern:
-                        "(---( )?(`)?spoiler(`)?( )?---)\n\n(.*?)\n( )?(---( )?(`)?spoiler(`)?( )?---)",
-                    style: TextStyle(
+                    pattern: r"--- spoiler ---.*?--- spoiler ---",
+                    style: const TextStyle(
                       color: Colors.purple,
-                      fontSize: 50,
+                      fontSize: 18,
+                      backgroundColor: Colors.purple,
                     ),
-                    onTap: (url) {
-                      launchUrl(Uri.parse("tel:$url"));
+                    onTap: (text) {
+                      // Show spoiler content when tapped
+                      debugPrint('Spoiler tapped: $text');
                     }),
                 MatchText(
                   pattern: r"\[(@[^:]+):([^\]]+)\]",

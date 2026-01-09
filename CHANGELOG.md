@@ -32,6 +32,8 @@
 
 - Added `flutter_lints` for static analysis
 - Improved documentation across all classes
+- Added comprehensive documentation for `RegexOptions` with examples for multiline matching (relates to [#11](https://github.com/fayeed/flutter_parsed_text/issues/11))
+- Updated example app to properly demonstrate multiline spoiler pattern with `dotAll: true`
 - Code cleanup and modernization for Dart 3.x
 
 ## [2.2.1]
